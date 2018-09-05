@@ -3,6 +3,7 @@ package akka.java.bookstore;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.java.bookstore.actors.OrderActor;
+import akka.java.bookstore.actors.StockActor;
 import akka.java.bookstore.extension.SpringExtension;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -30,7 +31,15 @@ public class BookstoreApplication {
         ActorRef orderActor =  actorSystem.actorOf(springExtension.props("orderActor", inventoryActor),
                 "order-actor");
 
+        ActorRef stockActor =  actorSystem.actorOf(springExtension.props("stockActor", inventoryActor),
+                "stock-actor");
+
         orderActor.tell(new OrderActor.OrderCreated(1234, 2), ActorRef.noSender());
+        orderActor.tell(new OrderActor.OrderCreated(1234, 2), ActorRef.noSender());
+        orderActor.tell(new OrderActor.OrderCreated(2345, 2), ActorRef.noSender());
+
+
+        stockActor.tell(new StockActor.BookAdded(1234, 2), ActorRef.noSender());
 
     }
 }
